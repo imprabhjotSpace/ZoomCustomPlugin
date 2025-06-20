@@ -5,11 +5,20 @@ SWIFT_SRC = zoom_vdi_plugin.swift
 BUNDLE_CONTENTS = $(BUILD_DIR)/$(PLUGIN_BUNDLE)/Contents
 BUNDLE_MACOS = $(BUNDLE_CONTENTS)/MacOS
 PLUGIN_BINARY = $(BUNDLE_MACOS)/ZoomVDIPlugin
+
+# Alternative compiler setup for SDK issues
 SWIFTC = xcrun swiftc
-SWIFT_FLAGS = -O -whole-module-optimization -target x86_64-apple-macos11.0 -sdk $(shell xcrun --show-sdk-path)
+SWIFT_FLAGS = -target x86_64-apple-macos10.15 -O
 FRAMEWORKS = -framework Foundation -framework AVFoundation -framework CoreAudio -framework IOKit -framework Network -framework VideoToolbox
 
-.PHONY: all clean install uninstall help
+# Try to find a compatible SDK
+XCODE_SDK = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
+CLT_SDK = $(shell xcrun --show-sdk-path 2>/dev/null || echo "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk")
+
+# Use Xcode SDK if available, otherwise use Command Line Tools SDK
+SDK_PATH = $(shell if [ -d "$(XCODE_SDK)" ]; then echo "$(XCODE_SDK)"; else echo "$(CLT_SDK)"; fi)
+
+.PHONY: all clean install uninstall help info
 
 all: $(PLUGIN_BUNDLE)
 
@@ -17,8 +26,9 @@ $(PLUGIN_BUNDLE): $(PLUGIN_BINARY) $(BUNDLE_CONTENTS)/Info.plist
 	@echo "Plugin bundle created"
 
 $(PLUGIN_BINARY): $(SWIFT_SRC) | $(BUNDLE_MACOS)
-	@echo "Compiling Swift plugin..."
-	$(SWIFTC) $(SWIFT_FLAGS) $(FRAMEWORKS) -emit-library -o $@ $<
+	@echo "Compiling Swift plugin with alternative settings..."
+	@echo "Using SDK: $(SDK_PATH)"
+	$(SWIFTC) $(SWIFT_FLAGS) -sdk $(SDK_PATH) $(FRAMEWORKS) -emit-library -o $@ $<
 	@chmod +x $@
 
 $(BUNDLE_CONTENTS)/Info.plist: | $(BUNDLE_CONTENTS)
@@ -56,7 +66,15 @@ $(BUILD_DIR):
 clean:
 	@rm -rf $(BUILD_DIR)
 
+info:
+	@echo "SDK Information:"
+	@echo "Xcode SDK: $(XCODE_SDK)"
+	@echo "CLT SDK: $(CLT_SDK)"
+	@echo "Selected SDK: $(SDK_PATH)"
+	@echo "Swift version: $(shell swift --version)"
+
 help:
-	@echo "Available targets: all, clean, help"
+	@echo "Available targets: all, clean, info, help"
+	@echo "Alternative Makefile for SDK compatibility issues"
 
 $(BUNDLE_CONTENTS): | $(BUILD_DIR) 
