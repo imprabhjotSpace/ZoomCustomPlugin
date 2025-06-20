@@ -1,0 +1,66 @@
+Core Plugin Components
+
+Main Plugin (Swift) - A robust plugin architecture with:
+
+Network manager for handling TCP/UDP connections
+Audio manager using AVAudioEngine for real-time processing
+Video manager with AVCaptureSession integration
+Codec management for efficient encoding/decoding
+Error handling and connection resilience
+
+
+Configuration System - Flexible JSON-based configuration supporting:
+
+Network settings (ports, timeouts, protocols)
+Audio/video quality parameters
+Security and encryption options
+Feature toggles and optimization settings
+
+
+Build System - Complete Makefile with:
+
+Compilation and linking
+Code signing support
+Package creation
+Installation automation
+
+
+
+Installation & Setup
+
+Automated Setup Script - Comprehensive bash script that:
+
+Validates system requirements
+Checks dependencies and permissions
+Builds and installs the plugin
+Configures Zoom integration
+Creates uninstall capability
+
+
+Documentation - Detailed README covering:
+
+Architecture overview with diagrams
+Step-by-step installation guide
+Configuration options and tuning
+Troubleshooting and debugging
+Performance optimization tips
+
+
+
+Key Features
+
+Real-time AV Redirection: Low-latency audio/video streaming
+Hardware Acceleration: Native macOS frameworks optimization
+Security: Encrypted transmission and secure device access
+Network Resilience: Automatic reconnection and error recovery
+Easy Configuration: JSON-based settings with sensible defaults
+Comprehensive Logging: Debug and monitoring capabilities
+
+Getting Started
+
+Run the setup script: ./setup.sh
+Grant camera/microphone permissions when prompted
+Configure your Cloud PC to connect to your Mac's IP on port 9001
+Start Zoom in your Cloud PC - AV should redirect automatically
+
+The plugin integrates seamlessly with Zoom's existing VDI infrastructure while providing enhanced performance and reliability for macOS users. It's designed to be production-ready with proper error handling, security considerations, and enterprise-grade features.
