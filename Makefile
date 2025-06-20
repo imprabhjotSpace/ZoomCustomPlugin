@@ -6,7 +6,7 @@ BUNDLE_CONTENTS = $(BUILD_DIR)/$(PLUGIN_BUNDLE)/Contents
 BUNDLE_MACOS = $(BUNDLE_CONTENTS)/MacOS
 PLUGIN_BINARY = $(BUNDLE_MACOS)/ZoomVDIPlugin
 SWIFTC = swiftc
-SWIFT_FLAGS = -O -whole-module-optimization
+SWIFT_FLAGS = -O -whole-module-optimization -sdk $(shell xcrun --show-sdk-path) -target x86_64-apple-macos10.15
 FRAMEWORKS = -framework Foundation -framework AVFoundation -framework CoreAudio -framework IOKit -framework Network -framework VideoToolbox
 
 .PHONY: all clean install uninstall help
