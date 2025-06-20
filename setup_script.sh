@@ -61,7 +61,7 @@ check_macos_version() {
 
 # Check if Zoom is installed
 check_zoom_installation() {
-    local zoom_app="/Applications/zoom.us.app"
+    local zoom_app="/Users/nathcorp/Applications/zoom.us.app"
     if [[ ! -d "$zoom_app" ]]; then
         log_error "Zoom application not found at $zoom_app"
         log_error "Please install Zoom first from https://zoom.us/download"
