@@ -16,17 +16,17 @@
     <key>CFBundlePackageType</key>
     <string>BNDL</string>
     <key>CFBundleShortVersionString</key>
-    <string>1.0.0</string>
+    <string>1.0.1</string> <!-- Updated version -->
     <key>CFBundleVersion</key>
-    <string>1</string>
+    <string>2</string> <!-- Updated version -->
     <key>NSHumanReadableCopyright</key>
-    <string>Copyright © 2024 Your Company. All rights reserved.</string>
+    <string>Copyright © 2025 Your Company. All rights reserved.</string>
     
     <!-- Plugin-specific keys -->
     <key>ZoomVDIPlugin</key>
     <dict>
         <key>Version</key>
-        <string>1.0.0</string>
+        <string>1.0.1</string> <!-- Updated version -->
         <key>Capabilities</key>
         <array>
             <string>audio_redirect</string>
@@ -38,7 +38,7 @@
             <string>macOS</string>
         </array>
         <key>MinimumSystemVersion</key>
-        <string>10.15</string>
+        <string>11.0</string> <!-- Updated minimum macOS version -->
     </dict>
     
     <!-- Privacy permissions -->
@@ -65,9 +65,9 @@
     "plugin": {
         "name": "Zoom VDI Helper",
         "identifier": "com.yourcompany.zoom.vdi.helper",
-        "version": "1.0.0",
+        "version": "1.0.1", // Updated version
         "platform": "macOS",
-        "min_os_version": "10.15"
+        "min_os_version": "11.0" // Updated minimum macOS version
     },
     "network": {
         "listen_port": 9001,
@@ -77,9 +77,9 @@
         "protocols": ["tcp", "udp"]
     },
     "audio": {
-        "sample_rate": 44100,
+        "sample_rate": 48000, // Updated for modern Zoom
         "channels": 2,
-        "bit_depth": 16,
+        "bit_depth": 24, // Updated for higher quality
         "codec": "opus",
         "latency_ms": 20
     },
@@ -87,14 +87,14 @@
         "resolution": "1920x1080",
         "fps": 30,
         "codec": "h264",
-        "bitrate_kbps": 2500,
+        "bitrate_kbps": 3000, // Updated for better quality
         "quality": "high"
     },
     "logging": {
         "level": "info",
         "file": "/tmp/zoom_vdi_plugin.log",
-        "max_size_mb": 10,
-        "rotate_count": 5
+        "max_size_mb": 20, // Increased log size
+        "rotate_count": 7 // Increased rotate count
     },
     "features": {
         "audio_echo_cancellation": true,
@@ -113,7 +113,7 @@
 PROJECT_NAME = ZoomVDIPlugin
 BUNDLE_NAME = ZoomVDIHelper.bundle
 TARGET_DIR = build
-INSTALL_DIR = ~/Library/Application Support/zoom.us/plugins
+INSTALL_DIR = ~/Library/Application\ Support/zoom.us/plugins
 
 # Compiler settings
 CC = clang
@@ -129,53 +129,53 @@ RESOURCES = Info.plist plugin.conf
 all: $(TARGET_DIR)/$(BUNDLE_NAME)
 
 $(TARGET_DIR)/$(BUNDLE_NAME): $(SWIFT_SOURCES) $(RESOURCES)
-	@mkdir -p $(TARGET_DIR)/$(BUNDLE_NAME)/Contents/MacOS
-	@mkdir -p $(TARGET_DIR)/$(BUNDLE_NAME)/Contents/Resources
-	
-	# Compile Swift sources
-	swiftc $(SWIFT_FLAGS) $(FRAMEWORK_FLAGS) \
-		-o $(TARGET_DIR)/$(BUNDLE_NAME)/Contents/MacOS/$(PROJECT_NAME) \
-		$(SWIFT_SOURCES)
-	
-	# Copy resources
-	cp Info.plist $(TARGET_DIR)/$(BUNDLE_NAME)/Contents/
-	cp plugin.conf $(TARGET_DIR)/$(BUNDLE_NAME)/Contents/Resources/
-	
-	@echo "✅ Plugin built successfully: $(TARGET_DIR)/$(BUNDLE_NAME)"
+    @mkdir -p $(TARGET_DIR)/$(BUNDLE_NAME)/Contents/MacOS
+    @mkdir -p $(TARGET_DIR)/$(BUNDLE_NAME)/Contents/Resources
+    
+    # Compile Swift sources
+    swiftc $(SWIFT_FLAGS) $(FRAMEWORK_FLAGS) \
+        -o $(TARGET_DIR)/$(BUNDLE_NAME)/Contents/MacOS/$(PROJECT_NAME) \
+        $(SWIFT_SOURCES)
+    
+    # Copy resources
+    cp Info.plist $(TARGET_DIR)/$(BUNDLE_NAME)/Contents/
+    cp plugin.conf $(TARGET_DIR)/$(BUNDLE_NAME)/Contents/Resources/
+    
+    @echo "✅ Plugin built successfully: $(TARGET_DIR)/$(BUNDLE_NAME)"
 
 install: $(TARGET_DIR)/$(BUNDLE_NAME)
-	@mkdir -p "$(INSTALL_DIR)"
-	cp -R $(TARGET_DIR)/$(BUNDLE_NAME) "$(INSTALL_DIR)/"
-	@echo "✅ Plugin installed to: $(INSTALL_DIR)/$(BUNDLE_NAME)"
+    @mkdir -p "$(INSTALL_DIR)"
+    cp -R $(TARGET_DIR)/$(BUNDLE_NAME) "$(INSTALL_DIR)/"
+    @echo "✅ Plugin installed to: $(INSTALL_DIR)/$(BUNDLE_NAME)"
 
 uninstall:
-	rm -rf "$(INSTALL_DIR)/$(BUNDLE_NAME)"
-	@echo "✅ Plugin uninstalled"
+    rm -rf "$(INSTALL_DIR)/$(BUNDLE_NAME)"
+    @echo "✅ Plugin uninstalled"
 
 clean:
-	rm -rf $(TARGET_DIR)
-	@echo "✅ Build artifacts cleaned"
+    rm -rf $(TARGET_DIR)
+    @echo "✅ Build artifacts cleaned"
 
 # Development helpers
 debug: SWIFT_FLAGS = -g -Onone
 debug: all
 
 test:
-	@echo "Running plugin tests..."
-	# Add test commands here
+    @echo "Running plugin tests..."
+    # Add test commands here
 
 codesign: $(TARGET_DIR)/$(BUNDLE_NAME)
-	codesign --sign "Developer ID Application: Your Name" \
-		--timestamp \
-		--options runtime \
-		$(TARGET_DIR)/$(BUNDLE_NAME)
-	@echo "✅ Plugin code signed"
+    codesign --sign "Developer ID Application: Your Name" \
+        --timestamp \
+        --options runtime \
+        $(TARGET_DIR)/$(BUNDLE_NAME)
+    @echo "✅ Plugin code signed"
 
 # Create installer package
 package: codesign
-	pkgbuild --root $(TARGET_DIR) \
-		--identifier com.yourcompany.zoom.vdi.helper \
-		--version 1.0.0 \
-		--install-location "/Library/Application Support/zoom.us/plugins" \
-		$(TARGET_DIR)/ZoomVDIHelper.pkg
-	@echo "✅ Installer package created: $(TARGET_DIR)/ZoomVDIHelper.pkg"
+    pkgbuild --root $(TARGET_DIR) \
+        --identifier com.yourcompany.zoom.vdi.helper \
+        --version 1.0.1 \  # Updated version
+        --install-location "/Library/Application Support/zoom.us/plugins" \
+        $(TARGET_DIR)/ZoomVDIHelper.pkg
+    @echo "✅ Installer package created: $(TARGET_DIR)/ZoomVDIHelper.pkg"

@@ -46,25 +46,25 @@ check_macos() {
     log_info "macOS detected ✓"
 }
 
-# Check macOS version
+# Check macOS version (require macOS 11.0 or later)
 check_macos_version() {
     local version=$(sw_vers -productVersion)
     local major_version=$(echo $version | cut -d. -f1)
     local minor_version=$(echo $version | cut -d. -f2)
     
-    if [[ $major_version -lt 10 ]] || [[ $major_version -eq 10 && $minor_version -lt 15 ]]; then
-        log_error "macOS 10.15 (Catalina) or later is required. Current version: $version"
+    if [[ $major_version -lt 11 ]]; then
+        log_error "macOS 11.0 (Big Sur) or later is required. Current version: $version"
         exit 1
     fi
     log_info "macOS version $version is supported ✓"
 }
 
-# Check if Zoom is installed
+# Check if Zoom is installed (latest path for user Applications)
 check_zoom_installation() {
-    local zoom_app="/Users/nathcorp/Applications/zoom.us.app"
+    local zoom_app="/Applications/zoom.us.app"
     if [[ ! -d "$zoom_app" ]]; then
         log_error "Zoom application not found at $zoom_app"
-        log_error "Please install Zoom first from https://zoom.us/download"
+        log_error "Please install the latest Zoom (v6.0+) from https://zoom.us/download"
         exit 1
     fi
     log_info "Zoom installation found ✓"
@@ -79,14 +79,15 @@ check_dependencies() {
         missing_deps+=("Xcode Command Line Tools")
     fi
     
-    # Check for Swift compiler
-    if ! which swiftc &> /dev/null; then
-        missing_deps+=("Swift compiler")
+    # Check for Swift compiler (Swift 5.10+)
+    if ! swiftc --version 2>/dev/null | grep -q "Swift version 5.10"; then
+        missing_deps+=("Swift 5.10+ compiler")
     fi
     
     if [[ ${#missing_deps[@]} -gt 0 ]]; then
         log_error "Missing dependencies: ${missing_deps[*]}"
         log_info "To install Xcode Command Line Tools, run: xcode-select --install"
+        log_info "To update Swift, visit: https://www.swift.org/download/"
         exit 1
     fi
     
@@ -162,7 +163,7 @@ create_config() {
         },
         "audio": {
             "enabled": true,
-            "sample_rate": 44100,
+            "sample_rate": 48000,
             "channels": 2,
             "echo_cancellation": true
         },
@@ -293,7 +294,7 @@ ${GREEN}🎉 Zoom VDI Plugin Installation Complete!${NC}
 ${BLUE}USAGE INSTRUCTIONS:${NC}
 
 1. ${YELLOW}Cloud PC Setup:${NC}
-   - Install Zoom on your Cloud PC (Windows 365/Azure Virtual Desktop)
+   - Install Zoom (v6.0 or later) on your Cloud PC (Windows 365/Azure Virtual Desktop)
    - Enable VDI optimization in Zoom settings
    - Configure the plugin to connect to your Mac IP address
 
@@ -309,7 +310,7 @@ ${BLUE}USAGE INSTRUCTIONS:${NC}
 
 4. ${YELLOW}Troubleshooting:${NC}
    - Ensure firewall allows port 9001
-   - Check System Preferences > Security & Privacy for camera/microphone permissions
+   - Check System Settings > Privacy & Security for camera/microphone permissions
    - View logs: tail -f /tmp/zoom_vdi_plugin.log
 
 ${BLUE}CONFIGURATION:${NC}
@@ -386,9 +387,10 @@ DESCRIPTION:
     audio and video redirection from Zoom running in a Cloud PC to your local Mac.
 
 REQUIREMENTS:
-    - macOS 10.15 or later
-    - Zoom desktop client installed
+    - macOS 11.0 or later
+    - Zoom desktop client v6.0+ installed
     - Xcode Command Line Tools
+    - Swift 5.10+ compiler
     - Camera and microphone permissions
 
 EOF

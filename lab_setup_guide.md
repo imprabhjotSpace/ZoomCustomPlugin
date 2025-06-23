@@ -44,7 +44,7 @@ This guide will help you set up a complete testing environment to develop and va
 ### Software Requirements
 
 **macOS Development Machine**
-- macOS 10.15+ (Big Sur 11+ recommended)
+- macOS 14.5+ (Big Sur 11+ recommended)
 - Xcode 12+ with Command Line Tools
 - Zoom client (latest version)
 - Git
