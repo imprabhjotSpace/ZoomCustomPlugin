@@ -75,13 +75,15 @@ check_dependencies() {
     local missing_deps=()
     
     # Check for Xcode command line tools
-    if ! xcode-select -p &> /dev/null; then
-        missing_deps+=("Xcode Command Line Tools")
+    if [[ "$xcode_path" != "/Applications/Xcode.app/Contents/Developer" ]]; then
+        log_warning "xcode-select is not set to the full Xcode path."
+        log_warning "Run: sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer"
+        missing_deps+=("Correct Xcode toolchain")
     fi
     
-    # Check for Swift compiler (Swift 5.10+)
-    if ! swiftc --version 2>/dev/null | grep -q "Swift version 5.10"; then
-        missing_deps+=("Swift 5.10+ compiler")
+    # Check for Swift compiler (Swift 6.0.3+)
+    if ! swiftc --version 2>/dev/null | grep -q "Swift version 6.0.3"; then
+        missing_deps+=("Swift 6.0.3 compiler")
     fi
     
     if [[ ${#missing_deps[@]} -gt 0 ]]; then
