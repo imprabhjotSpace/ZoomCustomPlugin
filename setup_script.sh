@@ -79,9 +79,9 @@ check_dependencies() {
         missing_deps+=("Xcode Command Line Tools")
     fi
     
-    # Check for Swift compiler (Swift 5.10+)
-    if ! swiftc --version 2>/dev/null | grep -q "Swift version 5.10"; then
-        missing_deps+=("Swift 5.10+ compiler")
+    # Check for Swift compiler (Swift 6.0.3+)
+    if ! swiftc --version 2>/dev/null | grep  -q "Swift version (6\.|5\.10)"; then
+        missing_deps+=("Swift 5.10 or 6x compiler")
     fi
     
     if [[ ${#missing_deps[@]} -gt 0 ]]; then
