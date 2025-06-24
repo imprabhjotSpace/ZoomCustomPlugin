@@ -82,7 +82,8 @@ check_dependencies() {
     fi
     
     # Check for Swift compiler (Swift 6.0.3+)
-
+    if ! swift --version 2>/dev/null | grep -q "Swift Version 6.0.3"; then
+       Missing_deps+=("Swift 6.0.3 compiler")
     fi
     
     if [[ ${#missing_deps[@]} -gt 0 ]]; then
