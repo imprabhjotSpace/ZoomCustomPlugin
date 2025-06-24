@@ -72,10 +72,13 @@ check_zoom_installation() {
 
 # Check for required tools
 check_dependencies() {
-    local missing_deps=()
-    
-    # Check for Xcode command line tools
-    if [[ "$xcode_path" != "/Applications/Xcode.app/Contents/Developer" ]]; then
+     local xcode_path
+    xcode_path=$(xcode-select -p 2>/dev/null)
+    if [[ ! -d "$xcode_path" ]]; then
+        log_error "xcode-select points to a non-existent path: $xcode_path"
+        log_error "Please install Xcode from the Mac App Store or https://developer.apple.com/xcode/"
+        missing_deps+=("Xcode not installed")
+    elif [[ "$xcode_path" != *"Xcode.app/Contents/Developer"* ]]; then
         log_warning "xcode-select is not set to the full Xcode path."
         log_warning "Run: sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer"
         missing_deps+=("Correct Xcode toolchain")
@@ -321,6 +324,12 @@ ${BLUE}CONFIGURATION:${NC}
 - Uninstall: Run ./uninstall.sh
 
 ${BLUE}NETWORK REQUIREMENTS:${NC}
+- macOS 11.0 or later
+    - Zoom desktop client v6.0+ installed
+    - Xcode (recommended from Mac App Store)
+    - Xcode Command Line Tools
+    - Swift 5.10+ or 6.x compiler
+    - Camera and microphone permissions
 - Port 9001 must be open between Cloud PC and Mac
 - Low latency network connection recommended
 - Minimum 2 Mbps bandwidth for video calls
