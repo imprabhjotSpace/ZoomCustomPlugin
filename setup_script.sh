@@ -1,5 +1,5 @@
 #!/bin/bash
-#test
+
 # Zoom VDI Plugin Setup Script
 # This script sets up the Zoom VDI Helper plugin for macOS
 
